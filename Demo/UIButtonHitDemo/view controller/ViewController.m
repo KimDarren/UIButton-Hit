@@ -13,6 +13,7 @@
 
 @interface ViewController ()
 
+@property (strong, nonatomic) UILabel *messageLabel;
 @property (strong, nonatomic) UIButton *demoButton;
 
 @end
@@ -25,16 +26,30 @@
     
     self.view.backgroundColor = [UIColor whiteColor];
     
+    // Initialize message label
+    _messageLabel = [[UILabel alloc] init];
+    _messageLabel.text = @"You should touch (or click in simulator) nearside of button below.";
+    _messageLabel.textColor = [UIColor blackColor];
+    _messageLabel.numberOfLines = 0;
+    _messageLabel.textAlignment = NSTextAlignmentCenter;
+    
+    // Initialize demo button
     _demoButton = [[UIButton alloc] init];
     _demoButton.clipsToBounds = YES;
     _demoButton.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:.4f];
     _demoButton.layer.cornerRadius = 6.0f;
-    _demoButton.hitEdgeInsets = UIEdgeInsetsMake(-30.0f, -30.0f, -30.0f, -30.0f);
-    
     [_demoButton setTitle:@"DEMO BUTTON" forState:UIControlStateNormal];
     [_demoButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [_demoButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+    [_demoButton addTarget:self action:@selector(showAlertWithButton:) forControlEvents:UIControlEventTouchUpInside];
+    
+    // =============================================
+    //          THE IMPORTANT LINE BELOW :D
+    // =============================================
+    _demoButton.hitEdgeInsets = UIEdgeInsetsMake(-100.0f, -30.0f, -100.0f, -30.0f);
     
     [self.view addSubview:_demoButton];
+    [self.view addSubview:_messageLabel];
 }
 
 - (void)viewDidLayoutSubviews
@@ -50,6 +65,23 @@
                                    (viewHeight - buttonHeight)/2.0f,
                                    buttonWidth,
                                    buttonHeight);
+    
+    _messageLabel.frame = CGRectMake(0, 0, viewWidth, 100.0f);
+}
+
+#pragma mark - Action
+
+- (void)showAlertWithButton:(UIButton *)demoButton
+{
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@""
+                                                                             message:@"It works!"
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *closeAction = [UIAlertAction actionWithTitle:@"Close"
+                                                          style:UIAlertActionStyleDefault
+                                                        handler:nil];
+    [alertController addAction:closeAction];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 @end

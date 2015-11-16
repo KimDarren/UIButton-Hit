@@ -3,7 +3,7 @@ UIButton+HitExtension
 
 ![CocoaPods](https://cocoapod-badges.herokuapp.com/v/UIButton+HitExtension/badge.png)
 
-Extension of `UIButton` to control it's touch area.
+Extension of `UIButton` to control its touch area.
 
 Installation
 ------------

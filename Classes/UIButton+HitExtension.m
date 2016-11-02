@@ -17,7 +17,7 @@
 // SDK
 #import <objc/runtime.h>
 
-static NSString * const HitExtensionHitEdgeInsetsKey = @"HitExtensionHitEdgeInsetsKey";
+static NSString * const DRNHitExtensionHitEdgeInsetsKey = @"DRNHitExtensionHitEdgeInsetsKey";
 
 @implementation UIButton (HitExtension)
 
@@ -26,11 +26,16 @@ static NSString * const HitExtensionHitEdgeInsetsKey = @"HitExtensionHitEdgeInse
 - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event
 {
     BOOL isZeroInsets = UIEdgeInsetsEqualToEdgeInsets(self.hitEdgeInsets, UIEdgeInsetsZero);
-    if (isZeroInsets || !self.enabled || self.hidden)
+    if (isZeroInsets || !self.enabled || self.hidden) {
         return [super pointInside:point withEvent:event];
+    }
     
+    UIEdgeInsets reversedEdgeInsets = UIEdgeInsetsMake(-self.hitEdgeInsets.top,
+                                                       -self.hitEdgeInsets.left,
+                                                       -self.hitEdgeInsets.bottom,
+                                                       -self.hitEdgeInsets.right);
     CGRect bounds = self.bounds;
-    CGRect hitFrame = UIEdgeInsetsInsetRect(bounds, self.hitEdgeInsets);
+    CGRect hitFrame = UIEdgeInsetsInsetRect(bounds, reversedEdgeInsets);
     
     return CGRectContainsPoint(hitFrame, point);
 }
@@ -40,14 +45,14 @@ static NSString * const HitExtensionHitEdgeInsetsKey = @"HitExtensionHitEdgeInse
 - (void)setHitEdgeInsets:(UIEdgeInsets)hitEdgeInsets
 {
     NSValue *value = [NSValue value:&hitEdgeInsets withObjCType:@encode(UIEdgeInsets)];
-    objc_setAssociatedObject(self, &HitExtensionHitEdgeInsetsKey, value, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, &DRNHitExtensionHitEdgeInsetsKey, value, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 #pragma mark - Getter
 
 - (UIEdgeInsets)hitEdgeInsets
 {
-    NSValue *edgeInsetsValue = objc_getAssociatedObject(self, &HitExtensionHitEdgeInsetsKey);
+    NSValue *edgeInsetsValue = objc_getAssociatedObject(self, &DRNHitExtensionHitEdgeInsetsKey);
     if (edgeInsetsValue) {
         UIEdgeInsets edgeInsets;
         [edgeInsetsValue getValue:&edgeInsets];

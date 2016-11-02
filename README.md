@@ -22,7 +22,7 @@ Create `UIButton`, then set `hitEdgeInsets`.
 
 ```objc
 UIButton *button = [[UIButton alloc] init];
-button.hitEdgeInsets = UIEdgeInsetsMake(-100.0f, -30.0f, -100.0f, -30.0f);
+button.hitEdgeInsets = UIEdgeInsetsMake(100.0f, 30.0f, 100.0f, 30.0f);
 ```
 
 Congratulations! You're done.
